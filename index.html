@@ -2,11 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>СЮРПРИЗ</title>
+    <title>Сюрприз</title>
     <style>
         * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
         body {
             background: #000;
@@ -14,103 +15,105 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            font-family: Arial Black, sans-serif;
+            font-family: Arial, sans-serif;
             overflow: hidden;
         }
         .btn {
-            display: inline-block;
             cursor: pointer;
-            transition: 0.3s;
             z-index: 10;
+            transition: 0.3s;
         }
-        .btn span {
-            font-size: 60px;
-            color: #fff;
-            background: #e94560;
-            padding: 30px 60px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px #e94560;
+        .btn img {
+            width: 280px;
+            border-radius: 30px;
+            box-shadow: 0 0 30px #ff00ff;
         }
         .btn:hover {
             transform: scale(1.1);
         }
-        .scare-text {
+
+        .overlay {
             display: none;
-            font-size: 120px;
-            font-weight: 900;
-            color: #ff0000;
-            text-shadow: 0 0 50px #ff0000, 0 0 100px #ff0000;
-            text-align: center;
             position: fixed;
-            z-index: 20;
-            animation: pulse 0.2s infinite alternate;
-            user-select: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
+        .overlay video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
+
         .flash {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: red;
-            z-index: 30;
-            display: none;
+            z-index: 50;
             pointer-events: none;
+            animation: flashAnim 0.1s infinite;
         }
+        @keyframes flashAnim {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
         @media (max-width: 600px) {
-            .scare-text { font-size: 60px; }
-            .btn span { font-size: 30px; padding: 20px 30px; }
+            .btn img { width: 200px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- КНОПКА -->
     <div class="btn" id="clickBtn">
-        <span>👆 НАЖМИ СЮДА</span>
+        <img src="https://via.placeholder.com/300x150/222/fff?text=НАЖМИ+СЮДА" alt="Нажми сюда">
     </div>
 
-    <div class="scare-text" id="scareText">
-        ОБЕРНИСЬ
+    <!-- ВИДЕО (ЛЮБОЕ) -->
+    <div class="overlay" id="videoOverlay">
+        <video id="myVideo" muted playsinline>
+            <source src="video.mp4" type="video/mp4">
+        </video>
     </div>
 
+    <!-- МИГАНИЕ ЭКРАНА -->
     <div class="flash" id="flashLayer"></div>
 
     <script>
         const btn = document.getElementById('clickBtn');
-        const scareText = document.getElementById('scareText');
+        const videoOverlay = document.getElementById('videoOverlay');
+        const myVideo = document.getElementById('myVideo');
         const flashLayer = document.getElementById('flashLayer');
 
         btn.addEventListener('click', function() {
-            const audio = new Audio('https://www.myinstants.com/media/sounds/scream-sound-effect.mp3');
-            audio.volume = 1;
-            audio.play();
 
+            // Прячем кнопку
             btn.style.display = 'none';
-            scareText.style.display = 'block';
 
+            // Мигание экрана 3 секунды
             flashLayer.style.display = 'block';
-            let flashCount = 0;
-            const flashInterval = setInterval(function() {
-                if (flashCount % 2 === 0) {
-                    flashLayer.style.background = 'red';
-                } else {
-                    flashLayer.style.background = 'black';
-                }
-                flashCount++;
-                if (flashCount >= 20) {
-                    clearInterval(flashInterval);
-                    flashLayer.style.display = 'none';
-                }
-            }, 100);
 
+            // Через 3 секунды — видео
             setTimeout(() => {
-                audio.play().catch(() => {});
-            }, 100);
+                flashLayer.style.display = 'none';
+                videoOverlay.style.display = 'flex';
+                myVideo.muted = false;
+                myVideo.play();
+            }, 3000);
+
         });
     </script>
+
 </body>
 </html>
