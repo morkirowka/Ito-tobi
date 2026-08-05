@@ -1,118 +1,289 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <title>Сюрприз</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❄️ SnowStealth</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3e 50%, #0a0a2a 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+            color: #fff;
             overflow: hidden;
         }
-        .btn {
-            cursor: pointer;
-            z-index: 10;
-            transition: 0.3s;
-        }
-        .btn img {
-            width: 280px;
-            border-radius: 30px;
-            box-shadow: 0 0 30px #ff00ff;
-        }
-        .btn:hover {
-            transform: scale(1.1);
-        }
 
-        .overlay {
-            display: none;
+        /* Фоновые снежинки */
+        #snow-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-        .overlay video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .flash {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: red;
-            z-index: 50;
             pointer-events: none;
-            animation: flashAnim 0.1s infinite;
-        }
-        @keyframes flashAnim {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
+            z-index: 0;
+            overflow: hidden;
         }
 
+        .snow-flake-bg {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 20px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Логотип */
+        .logo {
+            font-size: 100px;
+            display: block;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        h1 {
+            font-size: 56px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d2ff, #7b2ffc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        /* Кнопка скачивания */
+        .download-btn {
+            display: inline-block;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, #00d2ff, #7b2ffc);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 700;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0, 210, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 210, 255, 0.5);
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .download-btn .icon {
+            margin-right: 10px;
+        }
+
+        /* Сообщение под кнопкой */
+        .platform-msg {
+            margin-top: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #8899bb;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-msg .highlight {
+            color: #ffd93d;
+            font-weight: 600;
+        }
+
+        .platform-msg .github-link {
+            color: #00d2ff;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.3);
+        }
+
+        .platform-msg .github-link:hover {
+            border-bottom-color: #00d2ff;
+        }
+
+        /* Мобильная адаптация */
         @media (max-width: 600px) {
-            .btn img { width: 200px; }
+            .logo {
+                font-size: 70px;
+            }
+            h1 {
+                font-size: 36px;
+            }
+            .download-btn {
+                font-size: 18px;
+                padding: 16px 40px;
+            }
+            .platform-msg {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .logo {
+                font-size: 50px;
+            }
+            h1 {
+                font-size: 28px;
+            }
+            .download-btn {
+                font-size: 16px;
+                padding: 14px 30px;
+            }
+        }
+
+        /* Анимация появления */
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- КНОПКА -->
-    <div class="btn" id="clickBtn">
-        <img src="https://via.placeholder.com/300x150/222/fff?text=НАЖМИ+СЮДА" alt="Нажми сюда">
-    </div>
+    <!-- Фоновые снежинки -->
+    <div id="snow-bg"></div>
 
-    <!-- ВИДЕО (ЛЮБОЕ) -->
-    <div class="overlay" id="videoOverlay">
-        <video id="myVideo" muted playsinline>
-            <source src="video.mp4" type="video/mp4">
-        </video>
-    </div>
+    <div class="container fade-in">
+        <span class="logo">❄️</span>
+        <h1>SnowStealth</h1>
 
-    <!-- МИГАНИЕ ЭКРАНА -->
-    <div class="flash" id="flashLayer"></div>
+        <!-- Кнопка скачивания -->
+        <a href="#" id="downloadBtn" class="download-btn" target="_blank">
+            <span class="icon">⬇️</span> Скачать
+        </a>
+
+        <!-- Сообщение в зависимости от платформы -->
+        <div id="platformMsg" class="platform-msg">
+            🔄 Определяем ваше устройство...
+        </div>
+    </div>
 
     <script>
-        const btn = document.getElementById('clickBtn');
-        const videoOverlay = document.getElementById('videoOverlay');
-        const myVideo = document.getElementById('myVideo');
-        const flashLayer = document.getElementById('flashLayer');
+        // === ФОНОВЫЕ СНЕЖИНКИ ===
+        function createBgSnow() {
+            const container = document.getElementById('snow-bg');
+            const flakes = ['❄', '❅', '❆', '✦'];
+            for (let i = 0; i < 40; i++) {
+                const el = document.createElement('div');
+                el.className = 'snow-flake-bg';
+                el.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.fontSize = (10 + Math.random() * 30) + 'px';
+                el.style.animationDuration = (15 + Math.random() * 30) + 's';
+                el.style.animationDelay = (Math.random() * 25) + 's';
+                container.appendChild(el);
+            }
+        }
+        createBgSnow();
 
-        btn.addEventListener('click', function() {
+        // === ОПРЕДЕЛЕНИЕ ПЛАТФОРМЫ ===
+        function getPlatform() {
+            const ua = navigator.userAgent || '';
+            if (/android/i.test(ua)) return 'android';
+            if (/iphone|ipad|ipod/i.test(ua)) return 'ios';
+            if (/windows/i.test(ua)) return 'windows';
+            if (/mac/i.test(ua)) return 'mac';
+            if (/linux/i.test(ua)) return 'linux';
+            return 'other';
+        }
 
-            // Прячем кнопку
-            btn.style.display = 'none';
+        // === ССЫЛКА НА GITHUB ===
+        const GITHUB_URL = 'https://morkirowka.github.io/Ito-tobi/';
 
-            // Мигание экрана 3 секунды
-            flashLayer.style.display = 'block';
+        const platform = getPlatform();
+        const downloadBtn = document.getElementById('downloadBtn');
+        const platformMsg = document.getElementById('platformMsg');
 
-            // Через 3 секунды — видео
-            setTimeout(() => {
-                flashLayer.style.display = 'none';
-                videoOverlay.style.display = 'flex';
-                myVideo.muted = false;
-                myVideo.play();
-            }, 3000);
+        const isMobile = (platform === 'android' || platform === 'ios');
+        const isPC = (platform === 'windows' || platform === 'mac' || platform === 'linux');
 
-        });
+        if (isMobile) {
+            // ТЕЛЕФОН
+            downloadBtn.href = '#';
+            downloadBtn.style.opacity = '0.6';
+            downloadBtn.style.cursor = 'default';
+            downloadBtn.innerHTML = '📱 Скоро на телефоны';
+            downloadBtn.style.background = 'linear-gradient(135deg, #555577, #333355)';
+            downloadBtn.style.boxShadow = 'none';
+            
+            platformMsg.innerHTML = `
+                📱 Приложение для телефона <span class="highlight">в разработке</span> 🚧
+            `;
+
+        } else if (isPC) {
+            // ПК
+            downloadBtn.href = GITHUB_URL;
+            downloadBtn.innerHTML = '⬇️ Скачать для ПК';
+            
+            platformMsg.innerHTML = `
+                💻 Скачайте <span class="highlight">snow_stealth.pyw</span> в <a href="${GITHUB_URL}" target="_blank" class="github-link">GitHub Releases</a>
+            `;
+
+        } else {
+            // Неизвестная платформа
+            downloadBtn.href = GITHUB_URL;
+            downloadBtn.innerHTML = '⬇️ Перейти в GitHub';
+            
+            platformMsg.innerHTML = `
+                🖥️ Перейдите в <a href="${GITHUB_URL}" target="_blank" class="github-link">GitHub Releases</a>
+            `;
+        }
+
+        console.log('❄️ SnowStealth');
+        console.log('📱 Платформа:', platform);
+        console.log('🔗 Ссылка:', downloadBtn.href);
     </script>
 
 </body>
